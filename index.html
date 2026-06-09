@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Los Simpson — Personajes</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/css/style.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="container">
+        <span class="navbar-logo">🍩 Los Simpson</span>
+      </div>
+    </nav>
+
+    <header class="hero">
+      <div class="container">
+        <h1 class="hero-title">Conocé a todos los personajes</h1>
+        <div class="buscador-wrapper">
+          <input
+            type="text"
+            id="inputBusqueda"
+            class="buscador-input"
+            placeholder="Buscar por nombre..."
+          />
+          <button class="buscador-btn" id="btnBuscar">Buscar</button>
+          <button class="buscador-btn-clear d-none" id="btnLimpiar">✕</button>
+        </div>
+      </div>
+    </header>
+
+    <div class="container mt-3">
+      <div id="mensajeAlerta" class="alerta-custom d-none"></div>
+    </div>
+
+    <div class="container mt-2 mb-1">
+      <p id="contadorResultados" class="contador-texto d-none"></p>
+    </div>
+
+    <main class="container mb-5">
+      <div id="contenedor" class="row g-4"></div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/app.js"></script>
+  </body>
+</html>
