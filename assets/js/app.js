@@ -40,3 +40,65 @@ const obtenerPersonajes = async () => {
     return [];
   }
 };
+
+// ── Funciones de UI ──────────────────────────────────────────
+
+const mostrarAlerta = (texto) => {
+  mensajeAlerta.textContent = texto;
+  mensajeAlerta.classList.remove("d-none");
+};
+
+const ocultarAlerta = () => {
+  mensajeAlerta.classList.add("d-none");
+  mensajeAlerta.textContent = "";
+};
+
+const actualizarContador = (cantidad, total) => {
+  if (cantidad === total) {
+    contadorResultados.classList.add("d-none");
+  } else {
+    contadorResultados.textContent = `${cantidad} resultado${cantidad !== 1 ? "s" : ""} de ${total}`;
+    contadorResultados.classList.remove("d-none");
+  }
+};
+
+const limpiarContenedor = () => {
+  contenedor.innerHTML = "";
+};
+
+// ── Renderizado de tarjetas ──────────────────────────────────
+const renderizarTarjetas = (lista) => {
+  limpiarContenedor();
+  ocultarAlerta();
+
+  if (lista.length === 0) {
+    mostrarAlerta("🔍 No se encontraron personajes con ese nombre.");
+    actualizarContador(0, personajes.length);
+    return;
+  }
+
+  lista.forEach((personaje) => {
+    const urlImg     = construirUrlImagen(personaje.portrait_path);
+    const claseBadge = personaje.status === "Alive" ? "badge-alive" : "badge-deceased";
+    const textoEstado = personaje.status === "Alive" ? "● Alive" : "● Deceased";
+
+    contenedor.innerHTML += `
+      <div class="col-6 col-md-4 col-lg-3">
+        <div class="card-personaje">
+          <div class="card-img-wrapper">
+            <img src="${urlImg}" alt="${personaje.name}" loading="lazy"
+              onerror="this.src='https://placehold.co/210x210/1a2f4a/7a96b4?text=Sin+imagen'" />
+            <span class="badge-estado ${claseBadge}">${textoEstado}</span>
+          </div>
+          <div class="card-body-custom">
+            <h5 class="card-nombre">${personaje.name}</h5>
+            <p class="card-ocupacion">💼 ${personaje.occupation}</p>
+            <button class="btn-ver-detalle" data-id="${personaje.id}">Ver detalle</button>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+
+  actualizarContador(lista.length, personajes.length);
+};
