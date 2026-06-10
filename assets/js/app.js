@@ -102,3 +102,57 @@ const renderizarTarjetas = (lista) => {
 
   actualizarContador(lista.length, personajes.length);
 };
+
+// ── Filtrado (sin nuevo fetch) ───────────────────────────────
+const filtrarPersonajes = () => {
+  const termino = inputBusqueda.value.trim();
+
+  if (termino === "") {
+    mostrarAlerta("✏️ Ingresá un nombre para buscar.");
+    return;
+  }
+
+  const resultado = personajes.filter((p) =>
+    p.name.toLowerCase().includes(termino.toLowerCase())
+  );
+
+  renderizarTarjetas(resultado);
+  btnLimpiar.classList.remove("d-none");
+};
+
+// ── Inicialización ───────────────────────────────────────────
+const cargarPersonajes = async () => {
+  contenedor.innerHTML = `
+    <div class="col-12">
+      <div class="spinner-wrapper">
+        <div class="spinner-border text-warning" style="width:3rem;height:3rem;" role="status"></div>
+        <p>Cargando personajes...</p>
+      </div>
+    </div>
+  `;
+  personajes = await obtenerPersonajes();
+  renderizarTarjetas(personajes);
+};
+
+// ── Event listeners del buscador ────────────────────────────
+btnBuscar.addEventListener("click", filtrarPersonajes);
+
+inputBusqueda.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") filtrarPersonajes();
+});
+
+inputBusqueda.addEventListener("input", () => {
+  if (inputBusqueda.value.trim() === "") {
+    renderizarTarjetas(personajes);
+    btnLimpiar.classList.add("d-none");
+  }
+});
+
+btnLimpiar.addEventListener("click", () => {
+  inputBusqueda.value = "";
+  btnLimpiar.classList.add("d-none");
+  renderizarTarjetas(personajes);
+});
+
+// ── Arranque ─────────────────────────────────────────────────
+cargarPersonajes();
