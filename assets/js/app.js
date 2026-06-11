@@ -193,6 +193,7 @@ const mostrarModal = (personaje) => {
 
   myModal.show();
 };
+
 // ── Inicialización ───────────────────────────────────────────
 const cargarPersonajes = async () => {
   contenedor.innerHTML = `
@@ -226,6 +227,26 @@ btnLimpiar.addEventListener("click", () => {
   btnLimpiar.classList.add("d-none");
   renderizarTarjetas(personajes);
 });
+// ── Click en "Ver detalle" (delegación de eventos) ───────────
+// El listener va en el contenedor, no en cada botón,
+// porque los botones se crean dinámicamente y no existen al cargar la página
+contenedor.addEventListener("click", async (e) => {
+  if (e.target.classList.contains("btn-ver-detalle")) {
 
+    const idPersonaje = e.target.dataset.id;
+
+    // Mostramos spinner en el modal mientras carga
+    modalBody.innerHTML = `
+      <div class="modal-loading">
+        <div class="spinner-border text-warning" role="status"></div>
+        <p class="mt-3">Cargando personaje...</p>
+      </div>
+    `;
+    myModal.show();
+
+    const personaje = await obtenerDetalle(idPersonaje);
+    if (personaje) mostrarModal(personaje);
+  }
+});
 // ── Arranque ─────────────────────────────────────────────────
 cargarPersonajes();
