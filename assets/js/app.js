@@ -7,6 +7,10 @@ const URL_CDN            = "https://cdn.thesimpsonsapi.com/500";
 // El buscador filtra sobre este arreglo sin hacer nuevos fetchs
 let personajes = [];
 
+// Instancia del modal 
+const modalBody = document.querySelector("#modalBody");
+const myModal   = new bootstrap.Modal(document.querySelector("#modal"));
+
 // ── Referencias al DOM ──────────────────────────────────────
 const contenedor         = document.querySelector("#contenedor");
 const inputBusqueda      = document.querySelector("#inputBusqueda");
@@ -38,6 +42,19 @@ const obtenerPersonajes = async () => {
     console.error("Error al obtener el listado:", error);
     mostrarAlerta("⚠️ No se pudo cargar la lista de personajes.");
     return [];
+  }
+};
+// ── Fetch del detalle individual ─────────────────────────────
+const obtenerDetalle = async (id) => {
+  try {
+    const response = await fetch(`${URL_API_INDIVIDUAL}${id}`);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const data = await response.json();
+    return data; // el endpoint devuelve el objeto directamente, no un array
+  } catch (error) {
+    console.error("Error al obtener el detalle:", error);
+    mostrarAlerta("⚠️ No se pudo cargar el detalle. Intentá de nuevo.");
+    return null;
   }
 };
 
