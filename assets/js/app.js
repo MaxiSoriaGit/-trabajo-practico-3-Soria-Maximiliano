@@ -136,7 +136,63 @@ const filtrarPersonajes = () => {
   renderizarTarjetas(resultado);
   btnLimpiar.classList.remove("d-none");
 };
+// ── Mostrar modal con los datos del personaje ────────────────
+const mostrarModal = (personaje) => {
+  const urlImg     = construirUrlImagen(personaje.portrait_path);
+  const claseBadge = personaje.status === "Alive" ? "badge-alive" : "badge-deceased";
+  const edad       = personaje.age !== null ? `${personaje.age} años` : "Desconocida";
+  const nacimiento = formatearFecha(personaje.birthdate);
 
+  // Tomamos las primeras 3 frases (puede que algunos tengan pocas)
+  const frases = personaje.phrases && personaje.phrases.length > 0
+    ? personaje.phrases.slice(0, 3)
+    : ["Sin frases registradas."];
+
+  const frasesHTML = frases.map(f => `<div class="modal-frase">"${f}"</div>`).join("");
+
+  // Primer episodio (viene en el endpoint de detalle)
+  const ep = personaje.first_appearance_ep;
+  const episodioHTML = ep ? `
+    <div class="modal-episodio">
+      <p class="modal-episodio-label">📺 Primera aparición</p>
+      <p class="modal-episodio-nombre">${ep.name}</p>
+      <p class="modal-episodio-dato">Temporada ${ep.season} — Episodio ${ep.episode_number}</p>
+    </div>
+  ` : "";
+
+  modalBody.innerHTML = `
+    <div class="modal-inner">
+      <img src="${urlImg}" alt="${personaje.name}" class="modal-img"
+        onerror="this.src='https://placehold.co/150x150/1a2f4a/7a96b4?text=Sin+imagen'" />
+      <h2 class="modal-nombre">${personaje.name}</h2>
+      <span class="modal-estado-badge ${claseBadge}">${personaje.status}</span>
+      <div class="modal-grid">
+        <div class="modal-dato">
+          <p class="modal-dato-label">Edad</p>
+          <p class="modal-dato-valor">${edad}</p>
+        </div>
+        <div class="modal-dato">
+          <p class="modal-dato-label">Nacimiento</p>
+          <p class="modal-dato-valor">${nacimiento}</p>
+        </div>
+        <div class="modal-dato">
+          <p class="modal-dato-label">Género</p>
+          <p class="modal-dato-valor">${personaje.gender}</p>
+        </div>
+        <div class="modal-dato">
+          <p class="modal-dato-label">Ocupación</p>
+          <p class="modal-dato-valor">${personaje.occupation}</p>
+        </div>
+      </div>
+      ${personaje.description ? `<p class="modal-descripcion">${personaje.description}</p>` : ""}
+      <p class="modal-frases-titulo">💬 Frases características</p>
+      ${frasesHTML}
+      ${episodioHTML}
+    </div>
+  `;
+
+  myModal.show();
+};
 // ── Inicialización ───────────────────────────────────────────
 const cargarPersonajes = async () => {
   contenedor.innerHTML = `
